@@ -1,6 +1,7 @@
 import Html exposing (Html, div, span, text)
 import Html.App exposing (beginnerProgram)
-
+import Svg exposing (svg, circle)
+import Svg.Attributes exposing (width, height, cx, cy, r)
 
 main : Program Never
 main =
@@ -15,7 +16,7 @@ type alias Model =
 
 model : Model
 model =
-    { coefficients = [0] }
+    { coefficients = [1] }
 
 
 type Message =
@@ -30,17 +31,19 @@ update message model =
 view : Model -> Html Message
 view model =
     let
-        coefficients = viewCoefficients model.coefficients
+        radius = toString (100 * sum model.coefficients)
     in
-        div [] coefficients
+        svg [ width "480", height "480" ]
+            [
+             circle [ cx "0", cy "0", r radius ] []
+            ]
 
 
-viewCoefficients : List Int -> List (Html Message)
-viewCoefficients coefficients =
-    List.map viewCoefficient coefficients
+sum : List Int -> Int
+sum elements =
+    case elements of
+        [] ->
+            0
 
-
-viewCoefficient : Int -> Html Message
-viewCoefficient coefficient =
-    span [] [ text (toString coefficient) ]
-
+        x::xs ->
+            x + sum xs
