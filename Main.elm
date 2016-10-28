@@ -1,7 +1,7 @@
 import Html exposing (Html, div, span, text)
 import Html.App exposing (beginnerProgram)
-import Svg exposing (svg, circle)
-import Svg.Attributes exposing (width, height, cx, cy, r, viewBox)
+import Svg exposing (Svg, svg, circle, g)
+import Svg.Attributes exposing (width, height, cx, cy, r, viewBox, stroke, fill, strokeWidth)
 import String
 
 main : Program Never
@@ -17,7 +17,7 @@ type alias Model =
 
 model : Model
 model =
-    { coefficients = [1, 2] }
+    { coefficients = [3, 2, 1] }
 
 
 type Message =
@@ -39,8 +39,20 @@ view model =
         viewBoxStrings = List.map toString viewBoxValues
 
         box = String.join " " viewBoxStrings
+
+        circles = circlesFrom model.coefficients
     in
         svg [ width "480", height "480", viewBox box ]
             [
-             circle [ cx "0", cy "0", r "1" ] []
+              g [ stroke "black", fill "none", strokeWidth "1%" ]
+              circles
             ]
+
+
+circlesFrom : List Int -> List (Svg Message)
+circlesFrom coefficients =
+    let
+        circler radius =
+            circle [ cx "0", cy "0", r (toString radius) ] []
+    in
+        List.map circler coefficients
